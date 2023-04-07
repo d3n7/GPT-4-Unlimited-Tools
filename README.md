@@ -7,7 +7,7 @@ This unlocks the ability for GPT-4 to interact with the internet, APIs, and any 
 
 <img width="832" alt="Screen Shot 2023-04-07 at 11 24 58 PM" src="https://user-images.githubusercontent.com/29033313/230685207-e185912b-2a37-400c-a22e-7c7cbc9f791f.png">
 
-<img width="761" alt="Screen Shot 2023-04-07 at 11 45 54 PM" src="https://user-images.githubusercontent.com/29033313/230684069-953c860e-2da6-4884-b63a-c1a2ae42f6c3.png">
+<img width="848" alt="Screen Shot 2023-04-08 at 1 07 05 AM" src="https://user-images.githubusercontent.com/29033313/230690667-921ee2d1-6a31-4697-8202-1874bde8c251.png">
 
 With a fully editable knowledgebase to tell GPT-4 what commands it has access to, how they are used, and how they should be run by your CLI.
 
