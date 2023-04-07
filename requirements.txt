@@ -1,0 +1,6 @@
+pandas
+numpy
+streamlit
+stremlit_chat
+beautifulsoup4
+googlesearch-python
