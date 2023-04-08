@@ -5,7 +5,9 @@ This unlocks the ability for GPT-4 to interact with the internet, APIs, make and
 
 # Examples
 
-<img width="832" alt="Screen Shot 2023-04-07 at 11 24 58 PM" src="https://user-images.githubusercontent.com/29033313/230685207-e185912b-2a37-400c-a22e-7c7cbc9f791f.png">
+<img width="788" alt="Screen Shot 2023-04-08 at 3 55 56 PM" src="https://user-images.githubusercontent.com/29033313/230725162-11ce2407-7375-425c-b6f5-fc994bd5daac.png">
+File automatically generated from the above chat:
+<img width="1313" alt="Screen Shot 2023-04-08 at 3 56 24 PM" src="https://user-images.githubusercontent.com/29033313/230725166-c2815c85-6ee9-43e3-9468-9fe47301b375.png">
 
 <img width="848" alt="Screen Shot 2023-04-08 at 1 07 05 AM" src="https://user-images.githubusercontent.com/29033313/230690667-921ee2d1-6a31-4697-8202-1874bde8c251.png">
 
