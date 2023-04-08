@@ -1,6 +1,6 @@
 pandas
 numpy
-streamlit
-stremlit-chat
+streamlit==1.20.0
+streamlit-chat
 beautifulsoup4
 googlesearch-python
