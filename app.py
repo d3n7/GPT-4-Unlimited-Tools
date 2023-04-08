@@ -1,4 +1,4 @@
-import re, subprocess, openai
+import re, subprocess, openai, random
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -30,7 +30,7 @@ openaikey = st.text_input('OpenAI API Key', type='password')
 modelV = st.selectbox('Model', ('GPT-4', 'GPT-3.5-Turbo'))
 st.markdown('### Editable Knowledge Base\nDelete any commands will not need to save tokens.\n\nBe careful with the Raw Translation column. This is code that gets executed by your machine.')
 d = {'GPT Commands': ['GOOGLE("question")', 'PYTHON(script.py)', 'MAKEFILE("content\\nhere", filename.txt)', 'READFILE(filename.txt)', 'LISTFILES()'],
-     'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name.', 'Make a file with the given content and file name.', 'Read the content of a given filename', 'List the files you have access to'],
+     'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name. Do not use quotes for the filename argument.', 'Make a file with the given content and file name.', 'Read the content of a given filename', 'List the files you have access to'],
      'Raw Translation': ['python plugins/google.py {}', 'python files/{}', 'echo {} > files/{}', 'cat files/{}', 'ls files']
      }
 df = pd.DataFrame(data=d, dtype='string')
@@ -91,18 +91,25 @@ if st.session_state['running']:
                 if cmdId == -1:
                     fPrompt = 'Response: Unrecognized command'
                 elif '\'\'\'' in rawArgs:
-                    fPrompt = 'Response: Error parsing triple quotes (\'\'\') Use double quotes instead'
+                    fPrompt = 'Response: Error parsing multi-line string (\'\'\') Use double quotes and escaped newlines instead (")'
                 else:
                     command = commandTable['Raw Translation'][cmdId]
                     if rawArgs != '':
                         args = re.findall(regx[1], rawArgs)
                         command = command.format(*args)
-                    with st.spinner('Running command \''+command+'\''):
-                        try:
-                            p = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-                            fPrompt = 'Response: '+p.communicate()[0].decode("utf-8")
-                        except subprocess.CalledProcessError as e:
-                            fPrompt = 'Response: '+e.output.decode("utf-8")
+                    singleQuotes = False
+                    for i in args:
+                        if i.startswith("'"):
+                            singleQuotes = True
+                            fPrompt = "Response: Error parsing argument in single quotes. Use double quotes instead"
+                            break
+                    if not singleQuotes:
+                        with st.spinner('Running command \''+command+'\''):
+                            try:
+                                p = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+                                fPrompt = 'Response: '+p.communicate()[0].decode("utf-8")
+                            except subprocess.CalledProcessError as e:
+                                fPrompt = 'Response: '+e.output.decode("utf-8")
                 userResponses.append(fPrompt)
 
             response = askGPT('\n'.join(userResponses))
