@@ -30,7 +30,7 @@ openaikey = st.text_input('OpenAI API Key', type='password')
 modelV = st.selectbox('Model', ('GPT-4', 'GPT-3.5-Turbo'))
 st.markdown('### Editable Knowledge Base\nDelete any commands will not need to save tokens.\n\nBe careful with the Raw Translation column. This is code that gets executed by your machine.')
 d = {'GPT Commands': ['GOOGLE("question")', 'PYTHON(script.py)', 'MAKEFILE("content\\nhere", filename.txt)', 'READFILE(filename.txt)', 'LISTFILES()'],
-     'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name', 'Make a file with the given content and file name', 'Read the content of a given filename', 'List the files you have access to'],
+     'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name.', 'Make a file with the given content and file name.', 'Read the content of a given filename', 'List the files you have access to'],
      'Raw Translation': ['python plugins/google.py {}', 'python files/{}', 'echo {} > files/{}', 'cat files/{}', 'ls files']
      }
 df = pd.DataFrame(data=d, dtype='string')
@@ -69,8 +69,6 @@ if st.session_state['running']:
         response = askGPT(prompt)
 
         #parse GPT commands, possible back and forth
-        response = response.replace('\n', '\\n')
-        response = response.replace('\\\n', '\\n')
         while len(re.findall(regx[0], response)) >= 1:
             userResponses = []
             for cmd in re.findall(regx[0], response):
@@ -83,6 +81,8 @@ if st.session_state['running']:
                         stem = cmd[:x]
                         rawArgs = cmd[x+1:][:-1]
                         break
+                rawArgs.replace('\n','\\n')
+                rawArgs.replace('\\\n', '\\n')
                 for x, i in enumerate(commandTable['GPT Commands']):
                     if stem in i:
                         cmdId = x
@@ -90,6 +90,10 @@ if st.session_state['running']:
 
                 if cmdId == -1:
                     fPrompt = 'Response: Unrecognized command'
+                elif '\'\'\'' in rawArgs:
+                    fPrompt = 'Response: Error parsing triple quotes (\'\'\') Use double quotes instead'
+                elif '\n' in rawArgs:
+                    fPrompt = 'Response: Error parsing unescaped newlines'
                 else:
                     command = commandTable['Raw Translation'][cmdId]
                     if rawArgs != '':
@@ -104,8 +108,6 @@ if st.session_state['running']:
                 userResponses.append(fPrompt)
 
             response = askGPT('\n'.join(userResponses))
-            response = response.replace('\n', '\\n')
-            response = response.replace('\\\n', '\\n')
 
     else:
         st.warning('Make sure OpenAI key and prompt entered', icon='⚠️')
