@@ -1,4 +1,4 @@
-# GPT-4 Unlimited Plugins
+# GPT-4 Unlimited
 Custom Plugins and connection to the command line for GPT-4 (easy web app interface)
 
 This unlocks the ability for GPT-4 to interact with the internet, APIs, python scripts, and any applications that you could with a CLI. Basically it's open source, flexible, plugins for GPT-4.
