@@ -28,7 +28,7 @@ st.markdown('Made by [d3nt](https://github.com/d3n7) to give GPT-4 access to any
 st.markdown('### OpenAI Settings')
 openaikey = st.text_input('OpenAI API Key', type='password')
 modelV = st.selectbox('Model', ('GPT-4', 'GPT-3.5-Turbo'))
-st.markdown('### Editable Knowledge Base\nDelete any commands will not need to save tokens.\n\nBe careful with the Raw Translation column. This is code that gets executed by your machine.')
+st.markdown('### Editable Knowledge Base\nDelete any commands will not need to save tokens and increase accuracy.\n\nBe careful with the Raw Translation column. This is code that gets executed by your machine.')
 d = {'GPT Commands': ['GOOGLE("question")', 'PYTHON(script.py)', 'MAKEFILE("content\\nhere", filename.txt)', 'READFILE(filename.txt)', 'LISTFILES()'],
      'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name. Do not use quotes for the filename argument.', 'Make a file with the given content and file name.', 'Read the content of a given filename', 'List the files you have access to'],
      'Raw Translation': ['python plugins/google.py {}', 'python files/{}', 'echo {} > files/{}', 'cat files/{}', 'ls files']
@@ -94,6 +94,7 @@ if st.session_state['running']:
                     fPrompt = 'Response: Error parsing multi-line string (\'\'\') Use double quotes and escaped newlines instead (")'
                 else:
                     command = commandTable['Raw Translation'][cmdId]
+                    args = []
                     if rawArgs != '':
                         args = re.findall(regx[1], rawArgs)
                         command = command.format(*args)
