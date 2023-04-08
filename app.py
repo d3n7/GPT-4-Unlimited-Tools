@@ -11,8 +11,8 @@ if 'history' not in st.session_state:
     st.session_state['history'] = []
 if 'running' not in st.session_state:
     st.session_state['running'] = False
-regx = [r'\w+\((?:[^()]*|\([^()]*\))*\)', r'''(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b[^,]+)'''] #parsing commands, parsing arguments
-sysPrompt = 'You now have access to some commands to help complete the user\'s request. In every message you send, include "COMMAND: " with your command at the end. Here is a list of commands with explanations of how they are used:\n{}\n When you use a command, the user will respond with "Response: " followed by the output of the commmand. Use this output to help the user complete their request.'
+regx = [r'[A-Z]+\((?:[^()]*|\([^()]*\))*\)', r'''(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b[^,]+)'''] #parsing commands, parsing arguments
+sysPrompt = 'You now have access to some commands to help complete the user\'s request. You are able to access the user\'s machine with these commands. In every message you send, include "COMMAND: " with your command at the end. Here is a list of commands with explanations of how they are used:\n{}\n When you use a command, the user will respond with "Response: " followed by the output of the commmand. Use this output to help the user complete their request.'
 
 def formatTable(table):
     lines = ''
@@ -69,6 +69,8 @@ if st.session_state['running']:
         response = askGPT(prompt)
 
         #parse GPT commands, possible back and forth
+        response = response.replace('\n', '\\n')
+        response = response.replace('\\\n', '\\n')
         while len(re.findall(regx[0], response)) >= 1:
             userResponses = []
             for cmd in re.findall(regx[0], response):
@@ -102,6 +104,8 @@ if st.session_state['running']:
                 userResponses.append(fPrompt)
 
             response = askGPT('\n'.join(userResponses))
+            response = response.replace('\n', '\\n')
+            response = response.replace('\\\n', '\\n')
 
     else:
         st.warning('Make sure OpenAI key and prompt entered', icon='⚠️')
