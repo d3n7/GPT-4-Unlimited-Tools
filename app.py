@@ -92,8 +92,6 @@ if st.session_state['running']:
                     fPrompt = 'Response: Unrecognized command'
                 elif '\'\'\'' in rawArgs:
                     fPrompt = 'Response: Error parsing triple quotes (\'\'\') Use double quotes instead'
-                elif '\n' in rawArgs:
-                    fPrompt = 'Response: Error parsing unescaped newlines'
                 else:
                     command = commandTable['Raw Translation'][cmdId]
                     if rawArgs != '':
