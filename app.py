@@ -48,6 +48,7 @@ prompt = st.text_input('Message')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     if st.button('Send'):
+        st.session_state['followup'] = False
         st.session_state['running'] = True
 with col2:
     newSession = st.checkbox('New Session', True)
