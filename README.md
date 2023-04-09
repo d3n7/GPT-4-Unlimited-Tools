@@ -1,5 +1,7 @@
 # GPT-4 Unlimited
-Custom Plugins and connection to the command line for GPT-4 (easy web app interface)
+Custom Plugins for GPT-4 (easy web app interface)
+
+Basically, this script gives GPT-4 access to your command line. (Don't worry! By default you must approve every command manually)
 
 This unlocks the ability for GPT-4 to interact with the internet, APIs, python scripts, and any applications that you could with a CLI. Basically it's open source, flexible, plugins for GPT-4.
 
