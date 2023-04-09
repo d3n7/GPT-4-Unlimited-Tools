@@ -6,9 +6,10 @@ Basically, this script gives GPT-4 access to your command line. (Don't worry! By
 This unlocks the ability for GPT-4 to interact with the internet, APIs, python scripts, and any applications that you could with a CLI. Basically it's open source, flexible, plugins for GPT-4.
 
 # Examples
-This information is accurate thanks to Google:
+This information is accurate thanks to it's ability to Google:
 
-<img width="731" alt="Screen Shot 2023-04-09 at 8 08 03 PM" src="https://user-images.githubusercontent.com/29033313/230790963-d1827579-db0f-4460-8524-bb5956991c4a.png">
+<img width="738" alt="Screen Shot 2023-04-09 at 9 14 31 PM" src="https://user-images.githubusercontent.com/29033313/230792116-2f7d5d8f-16d6-4bf3-9154-52be1de91613.png">
+
 
 Automatic file generation:
 <img width="788" alt="Screen Shot 2023-04-08 at 3 55 56 PM" src="https://user-images.githubusercontent.com/29033313/230725162-11ce2407-7375-425c-b6f5-fc994bd5daac.png">
