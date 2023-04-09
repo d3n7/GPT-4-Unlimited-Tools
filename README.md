@@ -23,3 +23,4 @@ With a fully editable knowledgebase to tell GPT-4 what commands it has access to
 - Better parsing of incorrect command syntax instead of telling GPT to correct itself. (Save tokens)
 - OpenAI API Price calculator because god damn..
 - Rolling content window to avoid max tokens error
+- Require confirmation before running command (probably should've added this earlier lol but streamlit is wackY)
