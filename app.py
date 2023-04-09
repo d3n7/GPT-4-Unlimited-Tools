@@ -7,6 +7,14 @@ from streamlit_chat import message
 # some helper vars and functions
 if 'displayChat' not in st.session_state:
     st.session_state['displayChat'] = False
+if 'followup' not in st.session_state:
+    st.session_state['followup'] = False
+if 'followupPrompt' not in st.session_state:
+    st.session_state['followupPrompt'] = ''
+if 'command' not in st.session_state:
+    st.session_state['command'] = ''
+if 'acceptreject' not in st.session_state:
+    st.session_state['acceptreject'] = False
 if 'history' not in st.session_state:
     st.session_state['history'] = []
 if 'running' not in st.session_state:
@@ -37,16 +45,16 @@ df = pd.DataFrame(data=d, dtype='string')
 commandTable = st.experimental_data_editor(df, use_container_width=True, num_rows='dynamic')
 st.markdown('### Chat')
 prompt = st.text_input('Message')
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button('Send'):
+        st.session_state['running'] = True
 with col2:
     newSession = st.checkbox('New Session', True)
 with col3:
     showAll = st.checkbox('Show Commands And Outputs', False)
-
-#Send to GPT
-with col1:
-    if st.button('Send'):
-        st.session_state['running'] = True
+with col4:
+    manualApproval = st.checkbox('Require Manual Approval', True)
 
 def askGPT(input):
     st.session_state['history'].append({'role': 'user', 'content': input})
@@ -56,67 +64,102 @@ def askGPT(input):
     st.session_state['history'].append({'role': 'assistant', 'content': resp})
     return resp
 
+def runCmd(flag):
+    if flag:
+        with st.spinner('Running command \'' + st.session_state['command'] + '\''):
+            try:
+                p = subprocess.Popen(st.session_state['command'], shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+                st.session_state['followupPrompt'] = 'Response: ' + p.communicate()[0].decode("utf-8")
+            except subprocess.CalledProcessError as e:
+                st.session_state['followupPrompt'] = 'Response: ' + e.output.decode("utf-8")
+    else:
+        st.session_state['followupPrompt'] = "Response: User rejected this command"
+        st.session_state['followup'], st.session_state['running'] = True, True
+    st.session_state['followup'], st.session_state['running'] = True, True
+    st.experimental_rerun()
+
 if st.session_state['running']:
     st.session_state['running'] = False
     if prompt != '' and openaikey != '':
-        if newSession or st.session_state['history'] == []:
+        if (newSession or st.session_state['history'] == []) and (not st.session_state['followup']):
             st.session_state['history'] = [{'role': 'system', 'content': sysPrompt.format(formatTable(commandTable))}]
 
         if not st.session_state['displayChat']:
             st.session_state['displayChat'] = True
 
         openai.api_key = openaikey
-        response = askGPT(prompt)
+        if (st.session_state['followup']):
+            response = askGPT(st.session_state['followupPrompt'])
+            st.session_state['followup'] = False #completed, so reset this flag
+        else:
+            response = askGPT(prompt)
 
-        #parse GPT commands, possible back and forth
-        while len(re.findall(regx[0], response)) >= 1:
-            userResponses = []
-            for cmd in re.findall(regx[0], response):
-                stem = ''
-                rawArgs = ''
-                cmdId = -1
-                fPrompt = ''
-                for x, i in enumerate(cmd):
-                    if i == '(':
-                        stem = cmd[:x]
-                        rawArgs = cmd[x+1:][:-1]
+        #parse GPT commands, possible recursion
+        if len(re.findall(regx[0], response)) >= 1:
+            cmd = re.findall(regx[0], response)[0]
+            stem = ''
+            rawArgs = ''
+            cmdId = -1
+            for x, i in enumerate(cmd):
+                if i == '(':
+                    stem = cmd[:x]
+                    rawArgs = cmd[x+1:][:-1]
+                    break
+            rawArgs.replace('\n','\\n')
+            rawArgs.replace('\\\n', '\\n')
+            for x, i in enumerate(commandTable['GPT Commands']):
+                if stem in i:
+                    cmdId = x
+                    break
+
+            if cmdId == -1:
+                st.session_state['followupPrompt'] = 'Response: Unrecognized command'
+                st.session_state['followup'], st.session_state['running'] = True, True
+                st.experimental_rerun()
+            elif "'''" in rawArgs:
+                st.session_state['followupPrompt'] = 'Response: Error parsing multi-line string (\'\'\') Use double quotes and escaped newlines instead (")'
+                st.session_state['followup'], st.session_state['running'] = True, True
+                st.experimental_rerun()
+            elif '"""' in rawArgs:
+                st.session_state['followupPrompt'] = 'Response: Error parsing multi-line string (\"\"\") Use single double quotes and escaped newlines instead (")'
+                st.session_state['followup'], st.session_state['running'] = True, True
+                st.experimental_rerun()
+            else:
+                st.session_state['command'] = commandTable['Raw Translation'][cmdId]
+                args = []
+                if rawArgs != '':
+                    args = re.findall(regx[1], rawArgs)
+                    st.session_state['command'] = st.session_state['command'].format(*args)
+                singleQuotes = False
+                for i in args:
+                    if i.startswith("'"):
+                        singleQuotes = True
+                        st.session_state['followupPrompt'] = "Response: Error parsing argument in single quotes. Use double quotes around the argument instead"
+                        st.session_state['followup'], st.session_state['running'] = True, True
+                        st.experimental_rerun()
                         break
-                rawArgs.replace('\n','\\n')
-                rawArgs.replace('\\\n', '\\n')
-                for x, i in enumerate(commandTable['GPT Commands']):
-                    if stem in i:
-                        cmdId = x
-                        break
-
-                if cmdId == -1:
-                    fPrompt = 'Response: Unrecognized command'
-                elif '\'\'\'' in rawArgs:
-                    fPrompt = 'Response: Error parsing multi-line string (\'\'\') Use double quotes and escaped newlines instead (")'
-                else:
-                    command = commandTable['Raw Translation'][cmdId]
-                    args = []
-                    if rawArgs != '':
-                        args = re.findall(regx[1], rawArgs)
-                        command = command.format(*args)
-                    singleQuotes = False
-                    for i in args:
-                        if i.startswith("'"):
-                            singleQuotes = True
-                            fPrompt = "Response: Error parsing argument in single quotes. Use double quotes instead"
-                            break
-                    if not singleQuotes:
-                        with st.spinner('Running command \''+command+'\''):
-                            try:
-                                p = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-                                fPrompt = 'Response: '+p.communicate()[0].decode("utf-8")
-                            except subprocess.CalledProcessError as e:
-                                fPrompt = 'Response: '+e.output.decode("utf-8")
-                userResponses.append(fPrompt)
-
-            response = askGPT('\n'.join(userResponses))
+                if not singleQuotes:
+                    if manualApproval:
+                        st.session_state['acceptreject'] = True
+                    else:
+                        runCmd(1)
 
     else:
         st.warning('Make sure OpenAI key and prompt entered', icon='⚠️')
+
+col5, col6 = st.columns(2)
+if st.session_state['acceptreject']:
+    
+    st.warning('GPT is trying to run the following command: ' + st.session_state['command'] + '\nPlease approve or deny this request.')
+
+    with col5:
+        if st.button('Approve'):
+            st.session_state['acceptreject'] = False
+            runCmd(1)
+    with col6:
+        if st.button('Reject'):
+            st.session_state['acceptreject'] = False
+            runCmd(0)
 
 if st.session_state['displayChat']:
     for i in st.session_state['history']:
