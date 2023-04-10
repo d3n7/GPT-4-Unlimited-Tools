@@ -37,9 +37,9 @@ st.markdown('### OpenAI Settings')
 openaikey = st.text_input('OpenAI API Key', type='password')
 modelV = st.selectbox('Model', ('GPT-4', 'GPT-3.5-Turbo'))
 st.markdown('### Editable Knowledge Base\nDelete any commands will not need to save tokens and increase accuracy.\n\nBe careful with the Raw Translation column. This is code that gets executed by your machine.')
-d = {'GPT Commands': ['GOOGLE("question")', 'PYTHON(script.py)', 'MAKEFILE("content\\nhere", filename.txt)', 'READFILE(filename.txt)', 'LISTFILES()'],
-     'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name. Do not use quotes for the filename argument.', 'Make a file with the given content and file name.', 'Read the content of a given filename', 'List the files you have access to'],
-     'Raw Translation': ['python plugins/google.py {}', 'python files/{}', 'echo {} > files/{}', 'cat files/{}', 'ls files']
+d = {'GPT Commands': ['GOOGLE("question")', 'PYTHON(script.py)', 'MAKEFILE("content\\nhere", filename.txt)', 'READFILE(filename.txt)', 'LISTFILES()', 'BLIP("What\'s in this image?", img1.jpg)'],
+     'GPT Explanations': ['Search Google with the given text and return the results', 'Run a python script with the given file name. Do not use quotes for the filename argument.', 'Make a file with the given content and file name.', 'Read the content of a given filename', 'List the files you have access to', 'Ask BLIP-2, a vision model, a given question about a given image'],
+     'Raw Translation': ['python plugins/google.py {}', 'python files/{}', 'echo {} > files/{}', 'cat files/{}', 'ls files', 'python plugins/blip2.py {} {}']
      }
 df = pd.DataFrame(data=d, dtype='string')
 commandTable = st.experimental_data_editor(df, use_container_width=True, num_rows='dynamic')
