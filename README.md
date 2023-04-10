@@ -11,7 +11,7 @@ Basically, this app gives GPT-4 access to your command line. (Don't worry! By de
 
 This unlocks the ability for GPT-4 to interact with the internet, APIs, python scripts, and any applications that you could with a CLI. Basically it's open source, flexible, plugins for GPT-4.
 
-Web app: https://huggingface.co/spaces/cbg342/GPT4-Unlimited-Plugins
+Web app: https://huggingface.co/spaces/cbg342/GPT4-Unlimited-Plugins (Windows users are advised to use the HuggingFace)
 
 # Examples
 
