@@ -48,7 +48,6 @@ prompt = st.text_input('Message')
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     if st.button('Send'):
-        st.session_state['followup'] = False
         st.session_state['running'] = True
 with col2:
     newSession = st.checkbox('New Session', True)
@@ -118,11 +117,11 @@ if st.session_state['running']:
                 st.session_state['followup'], st.session_state['running'] = True, True
                 st.experimental_rerun()
             elif "'''" in rawArgs:
-                st.session_state['followupPrompt'] = 'Response: Error parsing multi-line string (\'\'\') Use double quotes and escaped newlines instead (")'
+                st.session_state['followupPrompt'] = 'Response: Error parsing multi-line string (\'\'\') Use a single line with escaped newlines instead (")'
                 st.session_state['followup'], st.session_state['running'] = True, True
                 st.experimental_rerun()
             elif '"""' in rawArgs:
-                st.session_state['followupPrompt'] = 'Response: Error parsing multi-line string (\"\"\") Use single double quotes and escaped newlines instead (")'
+                st.session_state['followupPrompt'] = 'Response: Error parsing multi-line string (\"\"\") Use a single line with escaped newlines instead (")'
                 st.session_state['followup'], st.session_state['running'] = True, True
                 st.experimental_rerun()
             else:
