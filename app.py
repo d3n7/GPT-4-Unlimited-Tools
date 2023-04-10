@@ -166,12 +166,12 @@ if st.session_state['displayChat']:
         if i['role'] == 'user':
             if not showAll:
                 if 'Response:' not in i['content']:
-                    message(i['content'], is_user=True)
+                    message(i['content'], is_user=True, key=random.randint(1,9000))
             else:
-                message(i['content'], is_user=True)
+                message(i['content'], is_user=True, key=random.randint(1,9000))
         elif i['role'] == 'assistant':
             if not showAll:
                 if 'COMMAND' not in i['content']:
-                    message(i['content'])
+                    message(i['content'], key=random.randint(1,9000))
             else:
-                message(i['content'])
+                message(i['content'], key=random.randint(1,9000))
