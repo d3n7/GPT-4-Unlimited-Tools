@@ -8,9 +8,13 @@ This unlocks the ability for GPT-4 to interact with the internet, APIs, python s
 Web app: https://huggingface.co/spaces/cbg342/GPT4-Unlimited-Plugins
 
 # Examples
+
+Using BLIP-2 (via Replicate API) to give GPT-4 vision!
+<img width="1264" alt="Screen Shot 2023-04-10 at 1 25 50 PM" src="https://user-images.githubusercontent.com/29033313/230893741-60cdc66b-0bdb-4626-9c0c-292079cac730.png">
+
 This information is accurate thanks to it's ability to Google:
 
-<img width="738" alt="Screen Shot 2023-04-09 at 9 14 31 PM" src="https://user-images.githubusercontent.com/29033313/230792116-2f7d5d8f-16d6-4bf3-9154-52be1de91613.png">
+<img width="731" alt="Screen Shot 2023-04-09 at 8 08 03 PM" src="https://user-images.githubusercontent.com/29033313/230893716-d08c80a8-267b-412e-9bde-9922aa2c0ef2.png">
 
 
 Automatic file generation:
