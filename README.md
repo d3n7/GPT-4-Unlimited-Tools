@@ -18,8 +18,6 @@ Web app: https://huggingface.co/spaces/cbg342/GPT4-Unlimited-Plugins (Windows us
 Using BLIP-2 (via Replicate API) to give GPT-4 vision!
 <img width="1264" alt="Screen Shot 2023-04-10 at 1 25 50 PM" src="https://user-images.githubusercontent.com/29033313/230893741-60cdc66b-0bdb-4626-9c0c-292079cac730.png">
 
-<img width="932" alt="Screen Shot 2023-04-11 at 5 31 41 PM" src="https://user-images.githubusercontent.com/29033313/231440150-4f24b71b-1e18-4d3f-85ea-331328c61242.png">
-
 
 This information is accurate thanks to it's ability to Google:
 
