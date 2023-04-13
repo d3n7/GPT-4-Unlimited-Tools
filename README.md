@@ -40,7 +40,8 @@ With a ***fully editable knowledgebase*** to tell GPT-4 what commands it has acc
 
 # Installation And Startup
 1. ```pip install -r requirements.txt```
-2. ```streamlit run app.py```
+2. If using vision plugin, add your Replicate API token to plugins/blip2.py
+3. ```streamlit run app.py```
 
 # To Do:
 - Better parsing of incorrect command syntax instead of telling GPT to correct itself. (Save tokens)
