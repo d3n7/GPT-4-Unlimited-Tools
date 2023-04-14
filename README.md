@@ -45,5 +45,4 @@ With a ***fully editable knowledgebase*** to tell GPT-4 what commands it has acc
 
 # To Do:
 - Better parsing of incorrect command syntax instead of telling GPT to correct itself. (Save tokens)
-- OpenAI API Price calculator because god damn..
 - Rolling content window to avoid max tokens error
