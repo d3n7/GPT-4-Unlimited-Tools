@@ -122,16 +122,10 @@ if st.session_state['running']:
         #parse GPT commands, possibly trigger this loop again
         if len(regex.findall(regx[0], response)) >= 1:
             cmd = regex.findall(regx[0], response)[0][0]
-            stem = ''
-            rawArgs = ''
+            pIndex = cmd.index('(')
+            stem = cmd[:pIndex]
+            rawArgs = cmd[pIndex+1:][:-1]
             cmdId = -1
-
-            #seperate command into stem and arguments
-            for x, i in enumerate(cmd):
-                if i == '(':
-                    stem = cmd[:x]
-                    rawArgs = cmd[x+1:][:-1]
-                    break
 
             #identify command
             for x, i in enumerate(commandTable['GPT Commands']):
