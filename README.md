@@ -1,5 +1,5 @@
 # GPT-4 Unlimited
-Custom Plugins for GPT-4 (easy web app interface)
+Custom Plugins for GPT-4 or GPT-3.5-Turbo (easy web app interface)
 
 Current features:
 - Googling information
